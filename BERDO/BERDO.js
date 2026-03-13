@@ -57,7 +57,7 @@ var config = {
         },
         {
             id: 'second-chapter',
-            alignment: 'left',
+            alignment: 'right',
             hidden: false,
             title: 'Boston Medical Center',
             image: './BERDO/assets/san-fran.jpeg',
@@ -117,7 +117,7 @@ var config = {
         },
         {
             id: 'fourth-chapter',
-            alignment: 'left',
+            alignment: 'right',
             hidden: false,
             title: 'Massachusetts General Hospital',
             image: './BERDO/assets/san-fran.jpeg',
@@ -157,6 +157,36 @@ var config = {
                 zoom: 18.92,
                 pitch: 85,
                 bearing: -151.31
+            },
+            mapAnimation: 'flyTo',
+            rotateAnimation: false,
+            callback: '',
+            onChapterEnter: [
+                {
+                layer: 'layer-name',
+                opacity: .5
+                }
+            ],
+            onChapterExit: [
+                {
+                layer: 'layer-name',
+                opacity: 1,
+                duration: 5000
+                }
+            ]
+        },
+         {
+            id: 'Sixth-chapter',
+            alignment: 'right',
+            hidden: false,
+            title: 'Boston Childrens Hospital',
+            image: './BERDO/assets/san-fran.jpeg',
+            description: 'Score: 57',
+            location: {
+                center: [-71.10513, 42.33695]],
+                zoom: 17.35,
+                pitch: 85,
+                bearing: -172.99
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
