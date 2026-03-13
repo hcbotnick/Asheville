@@ -3,11 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BERDO</title>
-    <script src="config.js"></script>
+    <title>Mapbox Storytelling Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="path/to/your/styles.css" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/scrollama@3.1.0/dist/scrollama.min.js"></script>
 </head>
 <body>
-    <h1>Welcome to BERDO</h1>
-    <p>Your content goes here.</p>
+    <div id="map" style="width: 100%; height: 100vh;"></div>
+    <script src="./BERDO/BERDO.js"></script>
+    <script>
+        // Initialize and configure the Mapbox map
+        mapboxgl.accessToken = 'your-mapbox-access-token';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-74.5, 40],
+            zoom: 9
+        });
+
+        // JavaScript logic for Scrollama and map interactions
+        // Define any chapters and their interactions here!
+        const chapters = [
+            // Example chapter structure
+            {
+                id: 'chapter-1',
+                title: 'Chapter 1',
+                description: 'Description of chapter 1',
+                center: [-74.5, 40],
+                zoom: 10
+            },
+            // Add more chapters as needed
+        ];
+
+        // Scrollama instance and logic
+        const scroller = scrollama();
+        scroller.setup({
+            step: '.step',
+            offset: 0.5,
+            debug: true
+        })
+        .onStepEnter(response => {
+            // Update map view on step enter
+            const chapter = chapters[response.index];
+            map.flyTo({
+                center: chapter.center,
+                zoom: chapter.zoom
+            });
+        });
+    </script>
 </body>
 </html>
