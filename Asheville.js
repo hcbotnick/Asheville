@@ -112,14 +112,14 @@ var config = {
             id: 'fourth-chapter',
             alignment: 'left',
             hidden: false,
-            title: 'Beth Israel Deaconess Medical Center',
-            //image: './assets/san-fran.jpeg',//
-            description: 'Score: 9',
+            title: 'WNC Wildlife Center',
+            image: './DSCF1820.png',
+            //description: '',
             location: {
-                center: [-71.10596, 42.34004],
-                zoom: 18.13,
+                center: [-82.49418, 35.57988],
+                zoom: 18.16,
                 pitch: 84,
-                bearing: 122.36
+                bearing: 69.60
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
