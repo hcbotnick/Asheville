@@ -231,7 +231,7 @@ var config = {
             ]
         },
          {
-            id: 'eigth-chapter',
+            id: 'eighth-chapter',
             alignment: 'left',
             hidden: false,
             title: 'New England Baptist Hospital',
