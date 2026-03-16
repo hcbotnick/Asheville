@@ -21,6 +21,12 @@ var config = {
     title: 'Explore Asheville',
     subtitle: 'Scroll to see highlights around the Asheville community, and the roles they play in Helene recovery.',
     footer: 'Visualization by Hayes Botnick.',
+     location: {
+                center: [-82.57548, 35.59627],
+                zoom: 9.38,
+                pitch: 0,
+                bearing: 0
+            }
     chapters: [
         {
             id: 'first-chapter',
