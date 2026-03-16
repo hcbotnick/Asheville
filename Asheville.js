@@ -146,10 +146,10 @@ var config = {
             image: 'IMG_4231.png',
             //description: '',
             location: {
-                center: [-82.58368, 35.62560],
+                center: [-82.60027, 35.64835],
                 zoom: 17.07,
                 pitch: 85,
-                bearing: -44.77
+                bearing: -7.01
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
