@@ -84,7 +84,7 @@ var config = {
             alignment: 'right',
             hidden: false,
             title: 'Western North Carolina Wildlife Center',
-            image: './assets/DSCF1820.png',
+            image: './DSCF1820.png',
             location: {
                 center: [-82.49427, 35.58004],
                 zoom: 17.20,
