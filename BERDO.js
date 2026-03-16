@@ -55,7 +55,7 @@ var config = {
             hidden: false,
             title: 'Asheville-Oteen Bank Building',
             image: './DSCF2943.png',
-           // description: '',//
+           // description: '',
             location: {
                 center: [-82.54296, 35.56759],
                 zoom: 19.41,
@@ -83,14 +83,13 @@ var config = {
             id: 'third-chapter',
             alignment: 'right',
             hidden: false,
-            title: 'Boston Medical Center',
-            //image: './assets/san-fran.jpeg',//
-            description: 'Score: 8',
+            title: 'Western North Carolina Wildlife Center',
+            image: './assets/DSCF1820.png',
             location: {
-                center: [-71.07388, 42.33387],
+                center: [-82.49427, 35.58004],
                 zoom: 17.20,
                 pitch: 85,
-                bearing: 103.14
+                bearing: -20.80
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
