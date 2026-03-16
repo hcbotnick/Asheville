@@ -139,7 +139,7 @@ var config = {
             ]
         },
          {
-            id: 'fourth-chapter',
+            id: 'fifth-chapter',
             alignment: 'right',
             hidden: false,
             title: 'French Broad River Cleanup with MountainTrue',
