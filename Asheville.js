@@ -83,13 +83,13 @@ var config = {
             id: 'third-chapter',
             alignment: 'right',
             hidden: false,
-            title: 'Western North Carolina Wildlife Center',
-            image: './DSCF1820.png',
+            title: 'Asheville Home Depot',
+            image: './HomeDepot',
             location: {
-                center: [-82.49427, 35.58004],
-                zoom: 17.20,
+                center: [-82.50635, 35.56660],
+                zoom: 18.03,
                 pitch: 85,
-                bearing: -20.80
+                bearing: -152.80
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
