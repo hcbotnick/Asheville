@@ -2,7 +2,7 @@ var config = {
     // style: 'mapbox://styles/mapbox/streets-v12',
     // leave commented to use Mapbox Standard Style
     accessToken: 'pk.eyJ1IjoiaGJvdG5pY2siLCJhIjoiY21tbnJyaXJhMDYyZjJyb2tnczVsOTM4dSJ9.W9qfSgTiWPBOlcxAQcClhg',
-    style: 'mapbox://styles/hbotnick/cmmofidyp004r01s19oyacgxp',
+    style: 'mapbox://styles/hbotnick/cmmqy9l3y003m01s47kgl417y',
     showMarkers: true,
     
     markerColor: '#3FB1CE',
@@ -18,22 +18,22 @@ var config = {
     theme: 'dark',
     use3dTerrain: false, //set true for enabling 3D maps.
     auto: false,
-    title: 'Where do Boston Hospitals Score?',
-    subtitle: 'Scroll to see different hospitals throughout Boston, and how their energy usage compares to others.',
-    footer: 'Visualization by Hayes Botnick. Data by the City of Boston.',
+    title: 'Explore Asheville',
+    subtitle: 'Scroll to see highlights around the Asheville community, and the roles they play in Helene recovery.',
+    footer: 'Visualization by Hayes Botnick.',
     chapters: [
         {
             id: 'first-chapter',
             alignment: 'left',
             hidden: false,
-            title: 'Brigham and Womens Medical Center',
-            //image: './assets/san-fran.jpeg',//
-            description: 'Score: 1',
+            title: 'Asheville-Oteen Bank Building',
+            image: './DSCF2943.png,
+           // description: '',//
             location: {
-                center: [-71.12861, 42.30239],
-                zoom: 17.65,
+                center: [-82.54296, 35.56759],
+                zoom: 19.41,
                 pitch: 85,
-                bearing: 169.57
+                bearing: -20.02
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
