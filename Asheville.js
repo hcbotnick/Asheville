@@ -84,7 +84,7 @@ var config = {
             alignment: 'right',
             hidden: false,
             title: 'Asheville Home Depot',
-            image: './HomeDepot',
+            image: './HomeDepot.png',
             location: {
                 center: [-82.50635, 35.56660],
                 zoom: 18.03,
