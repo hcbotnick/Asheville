@@ -22,7 +22,7 @@ var config = {
     footer: 'Visualization by Hayes Botnick.',
     chapters: [
     {
-            id: 'zero-chapter',
+            id: 'first-chapter',
             alignment: 'center',
             hidden: false,
             title: 'Scroll to see highlights around the Asheville community, and the roles they play in Helene recovery.',
@@ -51,7 +51,7 @@ var config = {
             ]
         },
         {
-            id: 'first-chapter',
+            id: 'second-chapter',
             alignment: 'left',
             hidden: false,
             title: 'Asheville-Oteen Bank Building',
@@ -81,7 +81,7 @@ var config = {
             ]
         },
         {
-            id: 'second-chapter',
+            id: 'third-chapter',
             alignment: 'right',
             hidden: false,
             title: 'Boston Medical Center',
@@ -111,7 +111,7 @@ var config = {
             ]
         },
         {
-            id: 'third-chapter',
+            id: 'fourth-chapter',
             alignment: 'left',
             hidden: false,
             title: 'Beth Israel Deaconess Medical Center',
@@ -141,7 +141,7 @@ var config = {
             ]
         },
         {
-            id: 'fourth-chapter',
+            id: 'fifth-chapter',
             alignment: 'right',
             hidden: false,
             title: 'Massachusetts General Hospital',
@@ -171,7 +171,7 @@ var config = {
             ]
         },
          {
-            id: 'fifth-chapter',
+            id: 'sixth-chapter',
             alignment: 'left',
             hidden: false,
             title: 'Shriners Hospital for Children',
@@ -201,7 +201,7 @@ var config = {
             ]
         },
         {
-            id: 'sixth-chapter',
+            id: 'seventh-chapter',
             alignment: 'right',
             hidden: false,
             title: 'Boston Childrens Hospital',
@@ -231,7 +231,7 @@ var config = {
             ]
         },
          {
-            id: 'seventh-chapter',
+            id: 'eigth-chapter',
             alignment: 'left',
             hidden: false,
             title: 'New England Baptist Hospital',
@@ -261,7 +261,7 @@ var config = {
             ]
         },
          {
-            id: 'eigth-chapter',
+            id: 'ninth-chapter',
             alignment: 'right',
             hidden: false,
             title: 'Franciscian Childrens Hospital',
@@ -290,6 +290,7 @@ var config = {
                 }
             ]
         },
-    ]}
+    ]
+}
         
     
