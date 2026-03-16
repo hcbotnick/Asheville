@@ -20,12 +20,6 @@ var config = {
     auto: false,
     title: 'Explore Asheville',
     footer: 'Visualization by Hayes Botnick.',
-     location: {
-                center: [-82.57548, 35.59627],
-                zoom: 9.38,
-                pitch: 0,
-                bearing: 0
-            }
     chapters: [
     {
             id: 'zero-chapter',
