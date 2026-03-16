@@ -118,8 +118,38 @@ var config = {
             location: {
                 center: [-82.49418, 35.57988],
                 zoom: 18.16,
-                pitch: 84,
+                pitch: 85,
                 bearing: 69.60
+            },
+            mapAnimation: 'flyTo',
+            rotateAnimation: false,
+            callback: '',
+            onChapterEnter: [
+                {
+                layer: 'layer-name',
+                opacity: .5
+                }
+            ],
+            onChapterExit: [
+                {
+                layer: 'layer-name',
+                opacity: 1,
+                duration: 5000
+                }
+            ]
+        },
+         {
+            id: 'fourth-chapter',
+            alignment: 'left',
+            hidden: false,
+            title: 'French Broad River Cleanup with MountainTrue',
+            image: 'IMG_4231.png',
+            //description: '',
+            location: {
+                center: [-82.58368, 35.62560],
+                zoom: 17.07,
+                pitch: 85,
+                bearing: -44.77
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
@@ -140,5 +170,3 @@ var config = {
         },
     ]
 }
- 
-    
