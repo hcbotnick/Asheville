@@ -55,7 +55,7 @@ var config = {
             alignment: 'left',
             hidden: false,
             title: 'Asheville-Oteen Bank Building',
-            image: './DSCF2943.png,
+            image: './DSCF2943.png',
            // description: '',//
             location: {
                 center: [-82.54296, 35.56759],
