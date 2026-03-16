@@ -26,7 +26,6 @@ var config = {
             alignment: 'center',
             hidden: false,
             title: 'Scroll to see highlights around the Asheville community, and the roles they play in Helene recovery.',
-            description: 'Score: 8',
             location: {
                 center: [-82.57548, 35.59627],
                 zoom: 9.38,
@@ -34,7 +33,7 @@ var config = {
                 bearing: 103.14
             },
             mapAnimation: 'flyTo',
-            rotateAnimation: false,
+            rotateAnimation: true,
             callback: '',
             onChapterEnter: [
                 {
