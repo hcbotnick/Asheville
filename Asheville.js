@@ -173,7 +173,7 @@ var config = {
             alignment: 'left',
             hidden: false,
             title: 'Fairview Christian Fellowship',
-            image: './MG_5263.JPG',
+            image: './IMG_5263.JPG',
             //description: '',
             location: {
                 center: [-82.41296, 35.52566],
