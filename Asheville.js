@@ -197,6 +197,36 @@ var config = {
                 duration: 5000
                 }
             ]
-        }
+        },
+        {
+            id: 'seventh-chapter',
+            alignment: 'right',
+            hidden: false,
+            title: 'Post Office- Marshall, NC',
+            image: './DSCF3061.png',
+            //description: '',
+            location: {
+                center: [-82.68262, 35.79664],
+                zoom: 18.75,
+                pitch: 85,
+                bearing: 26.40
+            },
+            mapAnimation: 'flyTo',
+            rotateAnimation: false,
+            callback: '',
+            onChapterEnter: [
+                {
+                layer: 'layer-name',
+                opacity: .5
+                }
+            ],
+            onChapterExit: [
+                {
+                layer: 'layer-name',
+                opacity: 1,
+                duration: 5000
+                }
+            ]
+        },
     ]
 }
