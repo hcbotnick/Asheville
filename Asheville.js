@@ -143,7 +143,7 @@ var config = {
             alignment: 'right',
             hidden: false,
             title: 'French Broad River Cleanup with MountainTrue',
-            image: 'IMG_4231.png',
+            image: './IMG_4231.png',
             //description: '',
             location: {
                 center: [-82.60530, 35.65738],
@@ -168,5 +168,35 @@ var config = {
                 }
             ]
         },
+        {
+            id: 'sixth-chapter',
+            alignment: 'left',
+            hidden: false,
+            title: 'Fairview Christian Fellowship',
+            image: './MG_5263.JPG',
+            //description: '',
+            location: {
+                center: [-82.41296, 35.52566],
+                zoom: 18.06,
+                pitch: 85,
+                bearing: -12.80
+            },
+            mapAnimation: 'flyTo',
+            rotateAnimation: false,
+            callback: '',
+            onChapterEnter: [
+                {
+                layer: 'layer-name',
+                opacity: .5
+                }
+            ],
+            onChapterExit: [
+                {
+                layer: 'layer-name',
+                opacity: 1,
+                duration: 5000
+                }
+            ]
+        }
     ]
 }
