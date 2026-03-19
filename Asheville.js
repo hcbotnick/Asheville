@@ -20,12 +20,12 @@ var config = {
     auto: false,
     title: 'Explore Asheville',
     footer: 'Visualization by Hayes Botnick.',
-    chapters: [
+   chapters: [
     {
             id: 'first-chapter',
             alignment: 'center',
             hidden: false,
-            title: 'Scroll to see highlights around the Asheville community, and the roles they play in Helene recovery.',
+            title: '',
             location: {
                 center: [-82.57548, 35.59627],
                 zoom: 9.38,
@@ -51,9 +51,10 @@ var config = {
         },
         {
             id: 'second-chapter',
-            alignment: 'left',
+            alignment: 'center',
             hidden: false,
             title: 'Asheville-Oteen Bank Building',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             image: './DSCF2943.png',
            // description: '',
             location: {
@@ -81,9 +82,10 @@ var config = {
         },
         {
             id: 'third-chapter',
-            alignment: 'right',
+            alignment: 'center',
             hidden: false,
             title: 'Asheville Home Depot',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             image: './HomeDepot.png',
             location: {
                 center: [-82.50635, 35.56660],
@@ -110,7 +112,7 @@ var config = {
         },
         {
             id: 'fourth-chapter',
-            alignment: 'left',
+            alignment: 'center',
             hidden: false,
             title: 'WNC Wildlife Center',
             image: './DSCF1820.png',
@@ -140,14 +142,14 @@ var config = {
         },
          {
             id: 'fifth-chapter',
-            alignment: 'right',
+            alignment: 'center',
             hidden: false,
             title: 'French Broad River Cleanup with MountainTrue',
             image: './IMG_4231.png',
             //description: '',
             location: {
                 center: [-82.60530, 35.65738],
-                zoom: 17.13,
+                zoom: 18,
                 pitch: 85,
                 bearing: 94.63
             },
@@ -170,7 +172,7 @@ var config = {
         },
         {
             id: 'sixth-chapter',
-            alignment: 'left',
+            alignment: 'center',
             hidden: false,
             title: 'Fairview Christian Fellowship',
             image: './IMG_5263.JPG',
@@ -187,7 +189,7 @@ var config = {
             onChapterEnter: [
                 {
                 layer: 'layer-name',
-                opacity: .5
+                opacity: .5,
                 }
             ],
             onChapterExit: [
@@ -200,7 +202,7 @@ var config = {
         },
         {
             id: 'seventh-chapter',
-            alignment: 'right',
+            alignment: 'center',
             hidden: false,
             title: 'Post Office- Marshall, NC',
             image: './DSCF3061.png',
