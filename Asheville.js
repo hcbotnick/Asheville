@@ -16,7 +16,7 @@ var config = {
     },
     insetPosition: 'bottom-right',
     theme: 'dark',
-    use3dTerrain: false, //set true for enabling 3D maps.
+    use3dTerrain: true, //set true for enabling 3D maps.
     auto: false,
     title: 'Explore Asheville',
     footer: 'Visualization by Hayes Botnick.',
