@@ -23,7 +23,7 @@ var config = {
    chapters: [
     {
             id: 'first-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: '',
             location: {
@@ -51,7 +51,7 @@ var config = {
         },
         {
             id: 'second-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'Asheville-Oteen Bank Building',
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
@@ -82,7 +82,7 @@ var config = {
         },
         {
             id: 'third-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'Asheville Home Depot',
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
@@ -112,7 +112,7 @@ var config = {
         },
         {
             id: 'fourth-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'WNC Wildlife Center',
             image: './DSCF1820.png',
@@ -142,7 +142,7 @@ var config = {
         },
          {
             id: 'fifth-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'French Broad River Cleanup with MountainTrue',
             image: './IMG_4231.png',
@@ -172,7 +172,7 @@ var config = {
         },
         {
             id: 'sixth-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'Fairview Christian Fellowship',
             image: './IMG_5263.JPG',
@@ -202,7 +202,7 @@ var config = {
         },
         {
             id: 'seventh-chapter',
-            alignment: 'center',
+            alignment: 'right',
             hidden: false,
             title: 'Post Office- Marshall, NC',
             image: './DSCF3061.png',
