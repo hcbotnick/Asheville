@@ -14,7 +14,7 @@ var config = {
     },
     insetPosition: 'bottom-right',
     theme: 'dark',
-    use3dTerrain: true, //set true for enabling 3D maps.
+    use3dTerrain: false, //set true for enabling 3D maps.
     lockMapView: true, // keep the map camera fixed while chapters animate in
     auto: false,
     title: 'Explore Asheville',
