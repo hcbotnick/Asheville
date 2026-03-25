@@ -9,6 +9,8 @@
         href="https://raw.githubusercontent.com/mapbox/assembly/publisher-staging/src/svgs/mapbox.svg">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-globe-minimap@1.2.0/dist/bundle.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
     <style>
@@ -58,6 +60,14 @@
             z-index: 5;
         }
 
+        h3{
+            color: black;
+            font-size: x-large;
+        } 
+        p {
+            color: black;
+            text-align: justify;
+        }
         #features {
             padding-top: 10vh;
             padding-bottom: 10vh;
@@ -82,7 +92,6 @@
             margin-left: 62vw;
         }
 
-
         .fully {
             width: 100%;
             margin: auto;
@@ -99,29 +108,93 @@
         }
 
         .step {
-            padding-bottom: 50vh;
-            /* margin-bottom: 10vh; */
-            opacity: 0.5;
+            position: relative;
+            padding-bottom: 30vh;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(18px) scale(0.985);
+            will-change: opacity, transform;
+            transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1), visibility 520ms linear;
         }
 
         .step.active {
-            opacity: 0.9;
-            top: 1vh;
+            position: sticky;
+            z-index: auto;
+            opacity: 0.99;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            top: 25vh;
+        }
+        .step.leaving {
+            position: relative;
+            z-index: auto;
+            opacity: 0.92;
+            visibility: visible;
+            pointer-events: none;
+            transform: translateY(8px) scale(0.995);
+            top: 25vh;
+        }
+
+        .animate__rollIn {
+            animation-duration: 1.5s;
+        }
+        .animate__rollOut {
+            animation-duration: 5s;
+        }
+        .step.entering {
+            animation: stepEnter 5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes stepEnter {
+            from {
+                opacity: 0;
+                transform: translateY(100%) scale(0.25);
+            }
+            to {
+                opacity: 0.99;
+                transform: translateY(0) scale(1);
+            }
         }
 
 
-        .step div {
-            padding: 25px 50px;
-            line-height: 25px;
-            font-size: 13px;
-            background-color: gray;
-            border-radius: 20px;
-        }
+    .step div {
+        padding: 0px;
+        text-align: center;
+        line-height: 25px;
+        font-size: 13px;
+        background-color: #f7f3ed;
+        border: 2px solid #ccc;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.18);
+        padding: 25px 25px;
+        text-align: center;
+        line-height: 25px;
+        font-size: 13px;
+        margin: 10px 0;
+        will-change: transform, opacity, box-shadow;
+        transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease;
+    }
 
-        .step img {
-            border-radius: 20px;
-            width: 100%;
-        }
+    .step.active > div {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), 0 3px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .step.leaving > div {
+        transform: translateY(6px) scale(0.992);
+        transition-duration: 3s;
+        opacity: 0.94;
+    }
+
+
+    .step img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
 
         @media (max-width: 750px) {
 
@@ -147,7 +220,7 @@
     <div id="map"></div>
     <div id="story"></div>
 
-    <script src="./BERDO.js"></script>
+    <script src="./Asheville.js"></script>
     <script>
         var initLoad = true;
         var layerTypes = {
@@ -173,6 +246,12 @@
         }
 
         function setLayerOpacity(layer) {
+            if (!layer || !layer.layer || typeof layer.opacity === 'undefined') {
+                return;
+            }
+            if (!map.getLayer(layer.layer)) {
+                return;
+            }
             var paintProps = getLayerPaintType(layer.layer);
             paintProps.forEach(function (prop) {
                 var options = {};
@@ -183,6 +262,197 @@
                 }
                 map.setPaintProperty(layer.layer, prop, layer.opacity, options);
             });
+        }
+
+        function normalizeAnimationList(value) {
+            if (Array.isArray(value)) {
+                return value.filter(Boolean);
+            }
+            if (typeof value === 'string' && value.trim().length > 0) {
+                return value.split(',').map(function (item) {
+                    return item.trim();
+                }).filter(Boolean);
+            }
+            return [];
+        }
+
+        function normalizeDurationList(value, count, fallback) {
+            if (Array.isArray(value)) {
+                return value.map(function (item) {
+                    return Number(item) || fallback;
+                });
+            }
+            return Array(count).fill(Number(value) || fallback);
+        }
+
+        function clearAnimateClasses(el) {
+            if (!el) {
+                return;
+            }
+            var animateClasses = Array.from(el.classList).filter(function (cls) {
+                return cls.indexOf('animate__') === 0;
+            });
+            animateClasses.forEach(function (cls) {
+                el.classList.remove(cls);
+            });
+            el.style.removeProperty('--animate-duration');
+        }
+
+        function runAnimationSequence(stepEl, animationList, durationList, index) {
+            if (index >= animationList.length) {
+                stepEl.classList.remove('animate__animated');
+                stepEl.style.removeProperty('--animate-duration');
+                return;
+            }
+
+            var animationClass = animationList[index];
+            var durationMs = durationList[index] || durationList[durationList.length - 1] || 1000;
+
+            stepEl.style.setProperty('--animate-duration', durationMs + 'ms');
+            stepEl.classList.add('animate__animated', animationClass);
+
+            setTimeout(function () {
+                stepEl.classList.remove(animationClass);
+                runAnimationSequence(stepEl, animationList, durationList, index + 1);
+            }, durationMs + 100);
+        }
+
+        function getSequenceTotalDuration(durationList, count) {
+            var normalized = durationList.slice(0, count);
+            var baseDuration = normalized.reduce(function (sum, durationMs) {
+                return sum + durationMs;
+            }, 0);
+            return baseDuration + (count * 100);
+        }
+
+        function getMaxDuration(durationList, count) {
+            var maxDuration = 0;
+            durationList.slice(0, count).forEach(function (durationMs) {
+                if (durationMs > maxDuration) {
+                    maxDuration = durationMs;
+                }
+            });
+            return maxDuration;
+        }
+
+        function runAnimationSimultaneous(stepEl, chapterEl, animationList, durationList) {
+            var maxDuration = 0;
+
+            animationList.forEach(function (animationClass, index) {
+                var targetEl = index % 2 === 0 ? stepEl : chapterEl;
+                var durationMs = durationList[index] || durationList[durationList.length - 1] || 1000;
+                targetEl.style.setProperty('--animate-duration', durationMs + 'ms');
+                targetEl.classList.add('animate__animated', animationClass);
+                if (durationMs > maxDuration) {
+                    maxDuration = durationMs;
+                }
+            });
+
+            setTimeout(function () {
+                clearAnimateClasses(stepEl);
+                clearAnimateClasses(chapterEl);
+            }, maxDuration + 120);
+        }
+
+        function runStepAnimation(stepEl, chapter, animationKey, durationKey, modeKey) {
+            var chapterEl = stepEl.firstElementChild;
+            var animationList = normalizeAnimationList(chapter && chapter[animationKey]);
+            if (animationList.length === 0) {
+                return 0;
+            }
+
+            var fallbackDuration = Number(chapter && chapter.stepAnimationDuration) || 1000;
+            var durationList = normalizeDurationList(chapter && chapter[durationKey], animationList.length, fallbackDuration);
+            var mode = chapter && chapter[modeKey];
+
+            if (mode === 'simultaneous' && chapterEl) {
+                runAnimationSimultaneous(stepEl, chapterEl, animationList, durationList);
+                return getMaxDuration(durationList, animationList.length) + 120;
+            }
+
+            runAnimationSequence(stepEl, animationList, durationList, 0);
+            return getSequenceTotalDuration(durationList, animationList.length);
+        }
+
+        function animateStepEnter(stepEl, chapter) {
+            stepEl.classList.remove('entering');
+            clearAnimateClasses(stepEl);
+            clearAnimateClasses(stepEl.firstElementChild);
+            void stepEl.offsetWidth;
+
+            if (chapter) {
+                var enterAnimationTime = runStepAnimation(stepEl, chapter, 'stepAnimation', 'stepAnimationDuration', 'stepAnimationMode');
+                if (enterAnimationTime > 0) {
+                    return;
+                }
+                return;
+            }
+
+            stepEl.classList.add('entering');
+            setTimeout(function () {
+                stepEl.classList.remove('entering');
+            }, 550);
+        }
+
+        function animateStepExit(stepEl, chapter) {
+            clearAnimateClasses(stepEl);
+            clearAnimateClasses(stepEl.firstElementChild);
+            void stepEl.offsetWidth;
+
+            if (!chapter) {
+                return 0;
+            }
+
+            var exitAnimationTime = runStepAnimation(stepEl, chapter, 'stepExitAnimation', 'stepExitAnimationDuration', 'stepExitAnimationMode');
+            return exitAnimationTime;
+        }
+
+        function getMaxTransitionDurationMs(el) {
+            if (!el) {
+                return 0;
+            }
+
+            var style = window.getComputedStyle(el);
+            var durations = style.transitionDuration.split(',').map(function (value) {
+                var trimmed = value.trim();
+                if (trimmed.indexOf('ms') > -1) {
+                    return Number(trimmed.replace('ms', '')) || 0;
+                }
+                if (trimmed.indexOf('s') > -1) {
+                    return (Number(trimmed.replace('s', '')) || 0) * 1000;
+                }
+                return 0;
+            });
+
+            return durations.reduce(function (max, current) {
+                return current > max ? current : max;
+            }, 0);
+        }
+
+        function beginStepExit(stepEl) {
+            if (!stepEl || stepEl.classList.contains('leaving')) {
+                return;
+            }
+
+            var chapter = config.chapters.find(function (chap) {
+                return chap.id === stepEl.id;
+            });
+            var exitAnimationTime = animateStepExit(stepEl, chapter);
+
+            if (stepEl._hideTimerId) {
+                clearTimeout(stepEl._hideTimerId);
+            }
+
+            stepEl.classList.remove('active');
+            stepEl.classList.add('leaving');
+
+            var cssExitDuration = getMaxTransitionDurationMs(stepEl) + 120;
+            var hideDelay = Math.max(exitAnimationTime + 120, cssExitDuration);
+
+            stepEl._hideTimerId = setTimeout(function () {
+                stepEl.classList.remove('leaving');
+                stepEl._hideTimerId = null;
+            }, hideDelay);
         }
 
         var story = document.getElementById('story');
@@ -319,26 +589,21 @@
                 .onStepEnter(async response => {
                     var current_chapter = config.chapters.findIndex(chap => chap.id === response.element.id);
                     var chapter = config.chapters[current_chapter];
-                    var chapterLocation = {
-                        ...chapter.location,
-                        essential: true
-                    };
 
-                    if (chapter.rotateAnimation) {
-                        map.once('moveend', () => {
-                            const rotateNumber = map.getBearing();
-                            map.rotateTo(rotateNumber + 180, {
-                                duration: 30000,
-                                essential: true,
-                                easing: function (t) {
-                                    return t;
-                                }
-                            });
-                        });
+                    document.querySelectorAll('.step.active').forEach(function (el) {
+                        if (el !== response.element) {
+                            beginStepExit(el);
+                        }
+                    });
+
+                    if (response.element._hideTimerId) {
+                        clearTimeout(response.element._hideTimerId);
+                        response.element._hideTimerId = null;
                     }
-
+                    response.element.classList.remove('leaving');
                     response.element.classList.add('active');
-                    map[chapter.mapAnimation || 'flyTo'](chapterLocation);
+                    animateStepEnter(response.element, chapter);
+                    map[chapter.mapAnimation || 'flyTo'](chapter.location);
 
                     if (config.showMarkers) {
                         marker.setLngLat(chapter.location.center);
@@ -349,6 +614,16 @@
                     if (chapter.callback) {
                         window[chapter.callback]();
                     }
+                    if (chapter.rotateAnimation) {
+                        map.once('moveend', () => {
+                            const rotateNumber = map.getBearing();
+                            map.rotateTo(rotateNumber + 180, {
+                                duration: 30000, easing: function (t) {
+                                    return t;
+                                }
+                            });
+                        });
+                    }
                     if (config.auto) {
                         var next_chapter = (current_chapter + 1) % config.chapters.length;
                         map.once('moveend', () => {
@@ -358,7 +633,7 @@
                 })
                 .onStepExit(response => {
                     var chapter = config.chapters.find(chap => chap.id === response.element.id);
-                    response.element.classList.remove('active');
+                    beginStepExit(response.element);
                     if (chapter.onChapterExit.length > 0) {
                         chapter.onChapterExit.forEach(setLayerOpacity);
                     }
