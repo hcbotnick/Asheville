@@ -1,652 +1,363 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-    <meta charset='utf-8' />
-    <title>Mapbox Storytelling</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <link rel="icon" type="image/x-icon"
-        href="https://raw.githubusercontent.com/mapbox/assembly/publisher-staging/src/svgs/mapbox.svg">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet' />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-globe-minimap@1.2.0/dist/bundle.js"></script>
-    <script src="https://unpkg.com/scrollama"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-        }
-
-        a,
-        a:hover,
-        a:visited {
-            color: #0071bc;
-        }
-
-        #map {
-            top: 0;
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
-        }
-
-        #header {
-            margin: auto;
-            width: 100%;
-            position: relative;
-            z-index: 5;
-        }
-
-        #header h1,
-        #header h2,
-        #header p {
-            margin: 0;
-            padding: 2vh 2vw;
-            text-align: center;
-        }
-
-        #footer {
-            width: 100%;
-            min-height: 5vh;
-            padding-top: 2vh;
-            padding-bottom: 2vh;
-            text-align: center;
-            line-height: 25px;
-            font-size: 13px;
-            position: relative;
-            z-index: 5;
-        }
-
-        h3{
-            color: black;
-            font-size: x-large;
-        } 
-        p {
-            color: black;
-            text-align: justify;
-        }
-        #features {
-            padding-top: 10vh;
-            padding-bottom: 10vh;
-        }
-
-        .hidden {
-            visibility: hidden;
-        }
-
-        .centered {
-            width: 50vw;
-            margin: 0 auto;
-        }
-
-        .lefty {
-            width: 33vw;
-            margin-left: 5vw;
-        }
-
-        .righty {
-            width: 33vw;
-            margin-left: 62vw;
-        }
-
-        .fully {
-            width: 100%;
-            margin: auto;
-        }
-
-        .light {
-            color: #444;
-            background-color: #fafafa;
-        }
-
-        .dark {
-            color: #fafafa;
-            background-color: #444;
-        }
-
-        .step {
-            position: relative;
-            padding-bottom: 30vh;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: translateY(18px) scale(0.985);
-            will-change: opacity, transform;
-            transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1), visibility 520ms linear;
-        }
-
-        .step.active {
-            position: sticky;
-            z-index: auto;
-            opacity: 0.99;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translateY(0) scale(1);
-            top: 25vh;
-        }
-        .step.leaving {
-            position: relative;
-            z-index: auto;
-            opacity: 0.92;
-            visibility: visible;
-            pointer-events: none;
-            transform: translateY(8px) scale(0.995);
-            top: 25vh;
-        }
-
-        .animate__rollIn {
-            animation-duration: 1.5s;
-        }
-        .animate__rollOut {
-            animation-duration: 5s;
-        }
-        .step.entering {
-            animation: stepEnter 5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        @keyframes stepEnter {
-            from {
-                opacity: 0;
-                transform: translateY(100%) scale(0.25);
-            }
-            to {
-                opacity: 0.99;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-
-    .step div {
-        padding: 0px;
-        text-align: center;
-        line-height: 25px;
-        font-size: 13px;
-        background-color: #f7f3ed;
-        border: 2px solid #ccc;
-        overflow: hidden;
-        box-sizing: border-box;
-        border: 2px solid rgba(255, 255, 255, 0.35);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.18);
-        padding: 25px 25px;
-        text-align: center;
-        line-height: 25px;
-        font-size: 13px;
-        margin: 10px 0;
-        will-change: transform, opacity, box-shadow;
-        transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease;
-    }
-
-    .step.active > div {
-        transform: translateY(0) scale(1);
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), 0 3px 10px rgba(0, 0, 0, 0.18);
-    }
-
-    .step.leaving > div {
-        transform: translateY(6px) scale(0.992);
-        transition-duration: 3s;
-        opacity: 0.94;
-    }
-
-
-    .step img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 5px;
-    }
-
-        @media (max-width: 750px) {
-
-            .centered,
-            .lefty,
-            .righty,
-            .fully {
-                width: 90vw;
-                margin: 0 auto;
-            }
-        }
-
-        /* Fix issue on mobile browser where scroll breaks  */
-        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
-        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas {
-            touch-action: unset;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div id="map"></div>
-    <div id="story"></div>
-
-    <script src="./Asheville.js"></script>
-    <script>
-        var initLoad = true;
-        var layerTypes = {
-            'fill': ['fill-opacity'],
-            'line': ['line-opacity'],
-            'circle': ['circle-opacity', 'circle-stroke-opacity'],
-            'symbol': ['icon-opacity', 'text-opacity'],
-            'raster': ['raster-opacity'],
-            'fill-extrusion': ['fill-extrusion-opacity'],
-            'heatmap': ['heatmap-opacity']
-        }
-        
-        var alignments = {
-            'left': 'lefty',
-            'center': 'centered',
-            'right': 'righty',
-            'full': 'fully'
-        }
-
-        function getLayerPaintType(layer) {
-            var layerType = map.getLayer(layer).type;
-            return layerTypes[layerType];
-        }
-
-        function setLayerOpacity(layer) {
-            if (!layer || !layer.layer || typeof layer.opacity === 'undefined') {
-                return;
-            }
-            if (!map.getLayer(layer.layer)) {
-                return;
-            }
-            var paintProps = getLayerPaintType(layer.layer);
-            paintProps.forEach(function (prop) {
-                var options = {};
-                if (layer.duration) {
-                    var transitionProp = prop + "-transition";
-                    options = { "duration": layer.duration };
-                    map.setPaintProperty(layer.layer, transitionProp, options);
-                }
-                map.setPaintProperty(layer.layer, prop, layer.opacity, options);
-            });
-        }
-
-        function normalizeAnimationList(value) {
-            if (Array.isArray(value)) {
-                return value.filter(Boolean);
-            }
-            if (typeof value === 'string' && value.trim().length > 0) {
-                return value.split(',').map(function (item) {
-                    return item.trim();
-                }).filter(Boolean);
-            }
-            return [];
-        }
-
-        function normalizeDurationList(value, count, fallback) {
-            if (Array.isArray(value)) {
-                return value.map(function (item) {
-                    return Number(item) || fallback;
-                });
-            }
-            return Array(count).fill(Number(value) || fallback);
-        }
-
-        function clearAnimateClasses(el) {
-            if (!el) {
-                return;
-            }
-            var animateClasses = Array.from(el.classList).filter(function (cls) {
-                return cls.indexOf('animate__') === 0;
-            });
-            animateClasses.forEach(function (cls) {
-                el.classList.remove(cls);
-            });
-            el.style.removeProperty('--animate-duration');
-        }
-
-        function runAnimationSequence(stepEl, animationList, durationList, index) {
-            if (index >= animationList.length) {
-                stepEl.classList.remove('animate__animated');
-                stepEl.style.removeProperty('--animate-duration');
-                return;
-            }
-
-            var animationClass = animationList[index];
-            var durationMs = durationList[index] || durationList[durationList.length - 1] || 1000;
-
-            stepEl.style.setProperty('--animate-duration', durationMs + 'ms');
-            stepEl.classList.add('animate__animated', animationClass);
-
-            setTimeout(function () {
-                stepEl.classList.remove(animationClass);
-                runAnimationSequence(stepEl, animationList, durationList, index + 1);
-            }, durationMs + 100);
-        }
-
-        function getSequenceTotalDuration(durationList, count) {
-            var normalized = durationList.slice(0, count);
-            var baseDuration = normalized.reduce(function (sum, durationMs) {
-                return sum + durationMs;
-            }, 0);
-            return baseDuration + (count * 100);
-        }
-
-        function getMaxDuration(durationList, count) {
-            var maxDuration = 0;
-            durationList.slice(0, count).forEach(function (durationMs) {
-                if (durationMs > maxDuration) {
-                    maxDuration = durationMs;
-                }
-            });
-            return maxDuration;
-        }
-
-        function runAnimationSimultaneous(stepEl, chapterEl, animationList, durationList) {
-            var maxDuration = 0;
-
-            animationList.forEach(function (animationClass, index) {
-                var targetEl = index % 2 === 0 ? stepEl : chapterEl;
-                var durationMs = durationList[index] || durationList[durationList.length - 1] || 1000;
-                targetEl.style.setProperty('--animate-duration', durationMs + 'ms');
-                targetEl.classList.add('animate__animated', animationClass);
-                if (durationMs > maxDuration) {
-                    maxDuration = durationMs;
-                }
-            });
-
-            setTimeout(function () {
-                clearAnimateClasses(stepEl);
-                clearAnimateClasses(chapterEl);
-            }, maxDuration + 120);
-        }
-
-        function runStepAnimation(stepEl, chapter, animationKey, durationKey, modeKey) {
-            var chapterEl = stepEl.firstElementChild;
-            var animationList = normalizeAnimationList(chapter && chapter[animationKey]);
-            if (animationList.length === 0) {
-                return 0;
-            }
-
-            var fallbackDuration = Number(chapter && chapter.stepAnimationDuration) || 1000;
-            var durationList = normalizeDurationList(chapter && chapter[durationKey], animationList.length, fallbackDuration);
-            var mode = chapter && chapter[modeKey];
-
-            if (mode === 'simultaneous' && chapterEl) {
-                runAnimationSimultaneous(stepEl, chapterEl, animationList, durationList);
-                return getMaxDuration(durationList, animationList.length) + 120;
-            }
-
-            runAnimationSequence(stepEl, animationList, durationList, 0);
-            return getSequenceTotalDuration(durationList, animationList.length);
-        }
-
-        function animateStepEnter(stepEl, chapter) {
-            stepEl.classList.remove('entering');
-            clearAnimateClasses(stepEl);
-            clearAnimateClasses(stepEl.firstElementChild);
-            void stepEl.offsetWidth;
-
-            if (chapter) {
-                var enterAnimationTime = runStepAnimation(stepEl, chapter, 'stepAnimation', 'stepAnimationDuration', 'stepAnimationMode');
-                if (enterAnimationTime > 0) {
-                    return;
-                }
-                return;
-            }
-
-            stepEl.classList.add('entering');
-            setTimeout(function () {
-                stepEl.classList.remove('entering');
-            }, 550);
-        }
-
-        function animateStepExit(stepEl, chapter) {
-            clearAnimateClasses(stepEl);
-            clearAnimateClasses(stepEl.firstElementChild);
-            void stepEl.offsetWidth;
-
-            if (!chapter) {
-                return 0;
-            }
-
-            var exitAnimationTime = runStepAnimation(stepEl, chapter, 'stepExitAnimation', 'stepExitAnimationDuration', 'stepExitAnimationMode');
-            return exitAnimationTime;
-        }
-
-        function getMaxTransitionDurationMs(el) {
-            if (!el) {
-                return 0;
-            }
-
-            var style = window.getComputedStyle(el);
-            var durations = style.transitionDuration.split(',').map(function (value) {
-                var trimmed = value.trim();
-                if (trimmed.indexOf('ms') > -1) {
-                    return Number(trimmed.replace('ms', '')) || 0;
-                }
-                if (trimmed.indexOf('s') > -1) {
-                    return (Number(trimmed.replace('s', '')) || 0) * 1000;
-                }
-                return 0;
-            });
-
-            return durations.reduce(function (max, current) {
-                return current > max ? current : max;
-            }, 0);
-        }
-
-        function beginStepExit(stepEl) {
-            if (!stepEl || stepEl.classList.contains('leaving')) {
-                return;
-            }
-
-            var chapter = config.chapters.find(function (chap) {
-                return chap.id === stepEl.id;
-            });
-            var exitAnimationTime = animateStepExit(stepEl, chapter);
-
-            if (stepEl._hideTimerId) {
-                clearTimeout(stepEl._hideTimerId);
-            }
-
-            stepEl.classList.remove('active');
-            stepEl.classList.add('leaving');
-
-            var cssExitDuration = getMaxTransitionDurationMs(stepEl) + 120;
-            var hideDelay = Math.max(exitAnimationTime + 120, cssExitDuration);
-
-            stepEl._hideTimerId = setTimeout(function () {
-                stepEl.classList.remove('leaving');
-                stepEl._hideTimerId = null;
-            }, hideDelay);
-        }
-
-        var story = document.getElementById('story');
-        var features = document.createElement('div');
-        features.setAttribute('id', 'features');
-
-        var header = document.createElement('div');
-
-        if (config.title) {
-            var titleText = document.createElement('h1');
-            titleText.innerText = config.title;
-            header.appendChild(titleText);
-        }
-
-        if (config.subtitle) {
-            var subtitleText = document.createElement('h2');
-            subtitleText.innerText = config.subtitle;
-            header.appendChild(subtitleText);
-        }
-
-        if (config.byline) {
-            var bylineText = document.createElement('p');
-            bylineText.innerText = config.byline;
-            header.appendChild(bylineText);
-        }
-
-        if (header.innerText.length > 0) {
-            header.classList.add(config.theme);
-            header.setAttribute('id', 'header');
-            story.appendChild(header);
-        }
-
-        config.chapters.forEach((record, idx) => {
-            var container = document.createElement('div');
-            var chapter = document.createElement('div');
-
-            if (record.title) {
-                var title = document.createElement('h3');
-                title.innerText = record.title;
-                chapter.appendChild(title);
-            }
-
-            if (record.image) {
-                var image = new Image();
-                image.src = record.image;
-                chapter.appendChild(image);
-            }
-
-            if (record.description) {
-                var story = document.createElement('p');
-                story.innerHTML = record.description;
-                chapter.appendChild(story);
-            }
-
-            container.setAttribute('id', record.id);
-            container.classList.add('step');
-            if (idx === 0) {
-                container.classList.add('active');
-            }
-
-            chapter.classList.add(config.theme);
-            container.appendChild(chapter);
-            container.classList.add(alignments[record.alignment] || 'centered');
-            if (record.hidden) {
-                container.classList.add('hidden');
-            }
-            features.appendChild(container);
-        });
-
-        story.appendChild(features);
-
-        var footer = document.createElement('div');
-
-        if (config.footer) {
-            var footerText = document.createElement('p');
-            footerText.innerHTML = config.footer;
-            footer.appendChild(footerText);
-        }
-
-        if (footer.innerText.length > 0) {
-            footer.classList.add(config.theme);
-            footer.setAttribute('id', 'footer');
-            story.appendChild(footer);
-        }
-
-        mapboxgl.accessToken = config.accessToken;
-
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: config.style,
-            center: config.chapters[0].location.center,
-            zoom: config.chapters[0].location.zoom,
-            bearing: config.chapters[0].location.bearing,
-            pitch: config.chapters[0].location.pitch,
-            interactive: false,
-            projection: config.projection
-        });
-
-
-        // instantiate the scrollama
-        var scroller = scrollama();
-
-
-        map.on("load", function () {
-            if (config.use3dTerrain) {
-                map.addSource('mapbox-dem', {
-                    'type': 'raster-dem',
-                    'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-                    'tileSize': 512,
-                    'maxzoom': 14
-                });
-                // add the DEM source as a terrain layer with exaggerated height
-                map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-
-                // add a sky layer that will show when the map is highly pitched
-                map.addLayer({
-                    'id': 'sky',
-                    'type': 'sky',
-                    'paint': {
-                        'sky-type': 'atmosphere',
-                        'sky-atmosphere-sun': [0.0, 0.0],
-                        'sky-atmosphere-sun-intensity': 15
-                    }
-                });
-            };
-
-            // setup the instance, pass callback functions
-            scroller
-                .setup({
-                    step: '.step',
-                    offset: 0.5,
-                    progress: true
-                })
-                .onStepEnter(async response => {
-                    var current_chapter = config.chapters.findIndex(chap => chap.id === response.element.id);
-                    var chapter = config.chapters[current_chapter];
-
-                    document.querySelectorAll('.step.active').forEach(function (el) {
-                        if (el !== response.element) {
-                            beginStepExit(el);
-                        }
-                    });
-
-                    if (response.element._hideTimerId) {
-                        clearTimeout(response.element._hideTimerId);
-                        response.element._hideTimerId = null;
-                    }
-                    response.element.classList.remove('leaving');
-                    response.element.classList.add('active');
-                    animateStepEnter(response.element, chapter);
-                    map[chapter.mapAnimation || 'flyTo'](chapter.location);
-
-                    if (config.showMarkers) {
-                        marker.setLngLat(chapter.location.center);
-                    }
-                    if (chapter.onChapterEnter.length > 0) {
-                        chapter.onChapterEnter.forEach(setLayerOpacity);
-                    }
-                    if (chapter.callback) {
-                        window[chapter.callback]();
-                    }
-                    if (chapter.rotateAnimation) {
-                        map.once('moveend', () => {
-                            const rotateNumber = map.getBearing();
-                            map.rotateTo(rotateNumber + 180, {
-                                duration: 30000, easing: function (t) {
-                                    return t;
-                                }
-                            });
-                        });
-                    }
-                    if (config.auto) {
-                        var next_chapter = (current_chapter + 1) % config.chapters.length;
-                        map.once('moveend', () => {
-                            document.querySelectorAll('[data-scrollama-index="' + next_chapter.toString() + '"]')[0].scrollIntoView();
-                        });
-                    }
-                })
-                .onStepExit(response => {
-                    var chapter = config.chapters.find(chap => chap.id === response.element.id);
-                    beginStepExit(response.element);
-                    if (chapter.onChapterExit.length > 0) {
-                        chapter.onChapterExit.forEach(setLayerOpacity);
-                    }
-                });
-
-
-            if (config.auto) {
-                document.querySelectorAll('[data-scrollama-index="0"]')[0].scrollIntoView();
-            }
-        });    
-
-    </script>
-
-</body>
-
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Scrolly example</title>
+		<link rel="stylesheet" href="avlstyle.css?v=20260411-5">
+		<link href="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css" rel="stylesheet">
+		<script src="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js"></script>
+	</head>
+	<body class="fl-mapbox-loading" data-map-style="style.json" data-map-start-hidden="true">
+		<script>
+			window.FL_SCROLLY_MAPBOX_TOKEN = "pk.eyJ1IjoiaGJvdG5pY2siLCJhIjoiY21teHFhemVmMzVrYTJwcTN6NXlvM25qdSJ9.-o-cnZPaq1qxtY_eYDbVAA";
+			window.FL_SCROLLY_MARKER_LAT_OFFSET = -0.0025;
+			window.FL_SCROLLY_STEP_CONFIG = {
+				"3628495": {
+					"0": {
+						lat: 30.2,
+						lng: -84.3,
+						zoom: 4,
+						pitch: 0,
+						bearing: 0,
+						hideIcons: true,
+						label: "trajectory-overview",
+						duration: 1000
+					},
+					"1": {
+						lat: 24.86784, 
+						lng: -85.9577,
+						zoom: 9,
+						pitch: 80,
+						bearing: 0,
+						hideIcons: true,
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+					"2": {
+						lat: 30.0013, 
+						lng: -83.84018,
+						zoom: 9,
+						pitch: 80,
+						bearing: 0,
+						hideIcons: true,
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+					"3": {	
+						lat: 33.48496, 
+						lng: -82.96234,
+						zoom: 9,
+						pitch: 80,
+						bearing: 0,
+						hideIcons: true,
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+
+					"4": {	
+						lat: 35.45874,
+						lng: -82.89912,
+						zoom: 9,
+						pitch: 80,
+						bearing: 0,
+						hideIcons: true,
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+					"5": {	
+						lat: 38,
+						lng: -87,
+						zoom: 9,
+						pitch: 80,
+						bearing: 0,
+						hideIcons: true,
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+					"6": {
+						lat: 38.85408,
+						lng: -100.56146,
+						zoom: 5,
+						pitch: 20,
+						bearing: 0,
+						hideIcons: true,
+						label: "transition",
+						rotateAnimation: false,
+						rotateLoop: true,
+						rotateSpeed: 5,
+						rotateDirection: "cw"
+					},
+					
+				},
+				"3630197": {
+					"0": {
+						lat: 35.60335,
+						lng: -82.54496,
+						zoom: 9.5,
+						pitch: 0,
+						bearing: 0,
+						hideMap: true,
+						hideIcons: true,
+						showMarker: false
+					},
+					"1": {
+						lat: 35.60335,
+						lng: -82.54496,
+						zoom: 13,
+						pitch: 0,
+						bearing: 0,
+						hideIcons: true,
+						showMarker: true,
+						markers: [
+							{
+								lat: 35.58435,
+								lng: -82.57336,
+								title: "City Hall accountability",
+								text: "Residents and officials still ask what went wrong and whether Asheville is ready for the next major storm.",
+								//imageSrc: "Center of Asheville - Credit Sydney DSCF1382.jpg",
+								//imageAlt: "Asheville city recovery reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								
+								lat: 35.58435,
+								lng: -82.51590,
+								title: "Music and recovery",
+								text: "Asheville artists and venues helped unify a fractured community through live music and shared spaces.",
+								imageSrc: "images/Center of Asheville - Credit Sydney DSCF1382.jpg",
+								imageAlt: "City of Asheville",
+								linkHref: "https://www.google.com/"
+							}
+						],
+					},
+					"2": {
+						lat: 35.464963,
+						lng: -82.287148,
+						zoom: 12,
+						pitch: 0,
+						bearing: 0,
+						hideIcons: true,
+						showMarker: true,
+						markers: [
+							{
+								lat: 35.454963,
+								lng: -82.287148,
+								title: "Churches on the front line",
+								text: "Churches proved vital to recovery efforts in the days immediately following the storm. Our reporter traveled across the region, from Bat Cave to Asheville, to visit, sketch and paint five parishes that were central to people’s survival.",
+								//imageSrc: "genchurch.CR3",
+								//imageAlt: "Church recovery support locations",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.43178,
+								lng: -82.22028,
+								title: "Tourism and business losses",
+								text: "From Chimney Rock to the River Arts District, businesses faced a long, uneven economic comeback.",
+								//imageSrc: "river.png",
+								//imageAlt: "Business recovery in mountain communities",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.43178,
+								lng: -82.35355,
+								title: "Post offices still offline",
+								text: "Reporters found multiple communities still missing local post office service long after the storm.",
+								imageSrc: "images/Green Mountain IMG_5593-2.jpg",
+								imageAlt: "Green Mountain",
+								linkHref: "https://www.google.com/"
+							},
+						],
+					},
+					"3": {
+						lat: 35.65007,
+						lng: -82.39539,
+						zoom: 12,
+						pitch: 0,
+						bearing: -10,
+						hideIcons: true,
+						showMarker: true,
+						markers: [
+							{
+								lat: 35.60431,
+								lng: -82.38905,
+								title: "A housing crisis",
+								text: "At the meeting point of two flooded rivers, Swannanoa saw homes swept away and neighborhoods transformed.",
+								imageSrc: "images/swannanoa.png",
+								imageAlt: "Swannanoa flood damage reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.58908,
+								lng: -82.46069,
+								title: "Wildlife and disaster",
+								text: "Experts across mountain waterways tracked how smaller and often overlooked species were affected by Helene.",
+								imageSrc: "images/French Broad - Credit Sydney IMG_4231.jpg",
+								imageAlt: "French Broad River wildlife reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.633511,
+								lng: -82.324325,
+								title: "Water resources",
+								text: "Water is a central character in the story of Helene. Our reporter walked the banks of the French and Swannanoa rivers as part of a report on why Asheville’s water supply went down and took so long to come back online.",
+								imageSrc: "images/IMG_5514.JPG",
+								imageAlt: "River",
+								linkHref: "https://www.google.com/"
+							},
+						],
+					},
+					"4": {
+						lat: 35.752039,
+						lng: -82.01426,
+						zoom: 8.5,
+						pitch: 0,
+						bearing: 0,
+						hideIcons: true,
+						showMarker: true,
+						markers: [
+							{
+								lat: 35.434941,
+								lng: -82.700625,
+								title: "Children carrying trauma",
+								text: "Children in places like Fletcher described persistent fear and nightmares long after the storm.",
+								imageSrc: "images/Fletcher.jpg",
+								imageAlt: "Child-focused recovery reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.332039,
+								lng: -82.011283,
+								title: "FEMA delays",
+								text: "Pastors and residents in Micaville and nearby towns described long waits and funding gaps in FEMA recovery support.",
+								imageSrc: "images/micaville.jpg",
+								imageAlt: "Damaged church and FEMA recovery reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.702039,
+								lng: -81.178337,
+								title: "Non-profits form to help",
+								text: "In Taylorsville, volunteer helicopter pilots described delivering supplies during Helene and preparing for future storms.",
+								imageSrc: "images/Taylorsville IMG_0592.jpg",
+								imageAlt: "Volunteer aid and supply drop story",
+								linkHref: "https://www.google.com/"
+							}
+						],
+					},
+					"5": {
+						lat: 35.6584,
+						lng: -82.60518,
+						zoom: 10,
+						pitch: 0,
+						bearing: 0,
+						hideIcons: true,
+						showMarker: true,
+						markers: [
+							{
+								lat: 35.62050,
+								lng: -82.32079,
+								title: "Stories of lost and found",
+								text: "From Asheville to Marshall and Black Mountain, displaced possessions told stories of loss and recovery.",
+								imageSrc: "images/Weaverville - Photo credit Sydney DSCF2137.jpg",
+								imageAlt: "Marshall",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.65584,
+								lng: -82.60518,
+								title: "Reclaimed wood",
+								text: "Debris litters the landscape after any major storm. But one woman, a luthier, decided to reuse some of the fallen tree wood in Asheville to make a guitar. Our reporter visited the saw mill and her studio to tell this story of hope and renewal. ",
+								//imageSrc: "micaville.jpg",
+								//imageAlt: "Damaged church and FEMA recovery reporting",
+								linkHref: "https://www.google.com/"
+							},
+							{
+								lat: 35.53634,
+								lng: -82.88721,
+								title: "Marginalized communities",
+								text: "Many official alerts were delivered in English, leaving non-native speakers unprepared for what was coming. Our reporter talked to a central figure in the Hispanic community to discuss the risk that communication failure poses to marginalized communities.",
+								imageSrc: "images/Blue Ridge Radio Station - Asheville.png",
+								imageAlt: "Volunteer aid and supply drop story",
+								linkHref: "https://www.google.com/"
+							}
+						],
+					},
+				}
+			};
+		</script>
+		<section class="intro-video-chapter" aria-label="Intro video chapter" data-intro-chapter="true">
+			<video class="intro-video" autoplay muted loop playsinline preload="auto">
+				<source src="1.mp4" type="video/mp4">
+			</video>
+			<div class="intro-video-overlay">
+				<p>Scroll to start the map story</p>
+			</div>
+		</section>
+
+		<div class="wrapper">
+			<div class="figure-container">
+				<!-- This is an example of where a CMS might wrap the embed in a div -->
+				<figure>
+					<div class="flourish-embed flourish-chart" data-src="story/3628495"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/story/3628495/thumbnail" width="100%" alt="visualization" /></noscript></div>
+				</figure>
+			</div>
+				<p class="first-trajectory-panel" data-story-id="3628495" data-slide="0">
+					Hurricane Helene's path from the Gulf of Mexico to Asheville, North Carolina. Follow along as we track the storm's journey and its devastating impact across the Southeast.
+				</p>
+				<p data-story-id="3628495" data-slide="1">
+					Hurricane Helene entered the Gulf of Mexico on September 24, 2024 as a Category 1 hurricane. As the system passed through the Gulf, abnormally high seasonal temperatures exacerbated the storm’s strength, building it up to a Category 4 hurricane over the next two days.
+				</p>
+
+				<p data-story-id="3628495" data-slide="2">				
+					On Sept 26, Helene made landfall in the Florida Big Bend region with wind speeds of 140 mph, bringing catastrophic flooding, extreme winds and tornadoes that devastated the southeastern US and southern Appalachia.
+				</p>
+
+				<p data-story-id="3628495" data-slide="3">
+					The system approached the border of Georgia, South Carolina and North Carolina late in the day on Sept 26, causing widespread destruction from flooding, landslides and strong winds. Hurricane-force winds spread as far east as coastal Georgia and southern South Carolina, and as far northwest as western North Carolina.
+
+				</p>
+
+				<p data-story-id="3628495" data-slide="4">
+					By the time Helene hit Asheville, it had “downgraded” to a tropical storm. However, eight to 10 inches of predecessor rainfall in the days prior caused the French Broad and Swannanoa Rivers to swell, resulting in up to 30 inches of rain in the hardest hit areas.
+
+				</p>
+
+				<p data-story-id="3628495" data-slide="5"> 
+					On Sept. 27, the storm headed north, downgrading into a post-tropical storm as it moved into southern Kentucky. The storm made a slow, cyclonic loop and dissipated shortly after over north-central Tennessee.
+				</p>
+		</div>
+
+		<div class="wrapper fl-scrolly-section fl-scrolly-section-no-flourish" data-story-id="3630197" data-hide-trajectory="true">
+			<div class="marker-step marker-step-transition" data-story-id="3630197" data-slide="0" id="chapter-transition" aria-label="North Carolina transition">
+				<div class="transition-media-bg" aria-hidden="true">
+					<video class="transition-bg-video" autoplay muted loop playsinline preload="auto">
+						<source src="images/IMG_5514.mp4">
+					</video>
+				</div>
+				<div class="transition-text-block" role="note" aria-label="Transition note">
+					<h3>North carolina at a glance</h3>
+					<p>Our group of reporters went to North Carolina, with the goal of shedding light on what many called a "1,000 year event" in Asheville and how the community has worked hard to rebuild since the disaster.</p>
+				</div>
+			</div>
+			<div class="marker-step" data-story-id="3630197" data-slide="1" id="chapter-1" aria-label="Chapter 1"></div>
+			<div class="marker-step" data-story-id="3630197" data-slide="2" id="chapter-2" aria-label="Chapter 2"></div>
+			<div class="marker-step" data-story-id="3630197" data-slide="3" id="chapter-3" aria-label="Chapter 3"></div>
+			<div class="marker-step" data-story-id="3630197" data-slide="4" id="chapter-4" aria-label="Chapter 4"></div>
+			<div class="marker-step" data-story-id="3630197" data-slide="5" id="chapter-5" aria-label="Chapter 5"></div>
+		</div>
+
+		<script src="flourish-scrolly.js?v=20260411-2"></script>
+	</body>
 </html>
+
